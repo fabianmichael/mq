@@ -35,7 +35,7 @@
 
   function createMqEvent(mql) {
     var event,
-        eventType,
+        eventType   = 'breakpointChange',
         eventDetail = {
           breakpoint: _currentBreakpoint, 
           initial: (_lastBreakpoint === undefined),
