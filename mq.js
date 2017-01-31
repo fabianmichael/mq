@@ -33,13 +33,13 @@
       _lastBreakpoint,
       _useNativeCustomEvent;
 
-  function createMqEvent(mql) {
+  function createMqEvent(query) {
     var event,
         eventType   = 'breakpointChange',
         eventDetail = {
           breakpoint: _currentBreakpoint, 
           initial: (_lastBreakpoint === undefined),
-          mql: mql,
+          query: query,
         };
 
     if(_useNativeCustomEvent !== false) {
@@ -90,9 +90,9 @@
   var index = 0;
   for(var i in breakpointsData) {
     if(breakpointsData.hasOwnProperty(i)) {
-      var mql = breakpointsData[i] = window.matchMedia(breakpointsData[i]);
-      mql.addListener(handleBreakpointChange);
-      breakpointMedia.push(mql);
+      var query = breakpointsData[i] = window.matchMedia(breakpointsData[i]);
+      query.addListener(handleBreakpointChange);
+      breakpointMedia.push(query);
       breakpointNames.push(i);
       breakpointIndices[i] = index;
       index++;
@@ -109,6 +109,10 @@
       return _currentBreakpoint;
     },
 
+    query: function(breakpoint) {
+      return breakpointsData[breakpoint !== undefined ? breakpoint : _currentBreakpoint].media;
+    },
+
     is: function(breakpoint) {
       return (breakpoint === _currentBreakpoint);
     },
@@ -122,14 +126,14 @@
     },
 
     bind: function(breakpoint, callback) {
-      return breakpointsData[breakpoint].addListener(function(mql) {
-        return callback(createEvent(mql), mql.matches);
+      return breakpointsData[breakpoint].addListener(function(query) {
+        return callback(createEvent(query), query.matches);
       });
     },
 
     listen: function(breakpoint, enter, leave, immediate) {
-      var callback = function(mql) {
-        return (mql.matches ? enter : leave)(createMqEvent(mql), mql.matches);
+      var callback = function(query) {
+        return (query.matches ? enter : leave)(createMqEvent(query), query.matches);
       };
 
       if(!!immediate) {
