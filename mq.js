@@ -131,7 +131,7 @@
       });
     },
 
-    listen: function(breakpoint, enter, leave, immediate) {
+    respond: function(breakpoint, enter, leave, immediate) {
       var callback = function(query) {
         return (query.matches ? enter : leave)(createMqEvent(query), query.matches);
       };
