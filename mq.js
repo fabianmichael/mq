@@ -25,8 +25,8 @@
       breakpointIndices  = {},
       comparators        = {
         // Used by the external API
-        '>=' : function(a,b) { return a >= b; },
-        '<'  : function(a,b) { return a < b;  },
+        '>=' : function(a, b) { return a >= b; },
+        '<'  : function(a, b) { return a <  b; },
       },
       _currentBreakpoint,
       _lastBreakpoint,
