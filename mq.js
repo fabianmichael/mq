@@ -18,8 +18,7 @@
     return;
   }
 
-  var quotesRegex        = /["']/g,
-      rawBreakpointData  = pseudoElement.getPropertyValue('content').replace(/(^['"]|['"]$)/g, '').replace(/\\(["'])/g, '$1'),
+  var rawBreakpointData  = pseudoElement.getPropertyValue('content').replace(/(^['"]|['"]$)/g, '').replace(/\\(["'])/g, '$1'),
       breakpointsData    = JSON.parse(rawBreakpointData),
       breakpointNames    = [],
       breakpointMedia    = [],
