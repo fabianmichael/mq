@@ -84,7 +84,7 @@ $mq--debug-selector     : 'body::after'   !default;
         // from {breakpoint} to {breakpoint}
         $min-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 2)));
         $max-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 4)) - 1px);
-      } @elseif length($query == 2) {
+      } @elseif length($query) == 2 {
         @if nth($query, 1) == from {
           // from {breakpoint}
           $min-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 2))); 
