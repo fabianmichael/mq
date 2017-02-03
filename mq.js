@@ -28,9 +28,26 @@
         '>=' : function(a, b) { return a >= b; },
         '<'  : function(a, b) { return a <  b; },
       },
+      defaultCallback    = function() {},
       _currentBreakpoint,
       _lastBreakpoint,
       _useNativeCustomEvent;
+  
+  
+  function extend(out) {
+    out = out || {};
+
+    for(var i = 1, l = arguments.length, i < l; i++) {
+      if(!arguments[i]) continue;
+      for(var key in arguments[i]) {
+        if(arguments[i].hasOwnProperty(key)) {
+          out[key] = arguments[i][key];
+        }
+      }
+    }
+
+    return out;
+  }
 
   function createMqEvent(query) {
     var event,
@@ -126,16 +143,23 @@
 
     bind: function(breakpoint, callback) {
       return breakpointsData[breakpoint].addListener(function(query) {
-        return callback(createEvent(query), query.matches);
+        return callback(createMqEvent(query), query.matches);
       });
     },
 
-    respond: function(breakpoint, enter, leave, immediate) {
+    respond: function(breakpoint, options) {
+      options = extend({
+        enter     : _fn,
+        leave     : _fn,
+        immediate : false,
+      }, options);
+      
       var callback = function(query) {
-        return (query.matches ? enter : leave)(createMqEvent(query), query.matches);
+        // Enter leave
+        options[query.matches ? 'enter' : 'leave'](createMqEvent(query), query.matches);
       };
 
-      if(!!immediate) {
+      if(options.immediate) {
         callback(reakpointsData[breakpoint]);
       }
 
