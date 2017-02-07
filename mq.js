@@ -23,12 +23,12 @@
       breakpointNames    = [],
       breakpointMedia    = [],
       breakpointIndices  = {},
+      noop               = function() {},
       comparators        = {
         // Used by the external API
         '>=' : function(a, b) { return a >= b; },
         '<'  : function(a, b) { return a <  b; },
       },
-      defaultCallback    = function() {},
       _currentBreakpoint,
       _lastBreakpoint,
       _useNativeCustomEvent;
@@ -121,23 +121,23 @@
   // Export API to global mq object
   window.mq = {
 
-    breakpoint: function() {
+    breakpoint: function () {
       return _currentBreakpoint;
     },
 
-    query: function(breakpoint) {
+    query: function (breakpoint) {
       return breakpointsData[breakpoint !== undefined ? breakpoint : _currentBreakpoint].media;
     },
 
-    is: function(breakpoint) {
+    is: function (breakpoint) {
       return (breakpoint === _currentBreakpoint);
     },
 
-    above: function(breakpoint) {
+    above: function (breakpoint) {
       return compare(breakpoint, '>=');
     },
 
-    below: function(breakpoint) {
+    below: function (breakpoint) {
       return compare(breakpoint, '<');
     },
 
@@ -147,10 +147,10 @@
       });
     },
 
-    respond: function(breakpoint, options) {
+    respond: function (breakpoint, options) {
       options = extend({
-        enter     : _fn,
-        leave     : _fn,
+        enter     : noop,
+        leave     : noop,
         immediate : false,
       }, options);
       
