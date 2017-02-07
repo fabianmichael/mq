@@ -37,7 +37,7 @@
   function extend(out) {
     out = out || {};
 
-    for(var i = 1, l = arguments.length, i < l; i++) {
+    for(var i = 1, l = arguments.length; i < l; i++) {
       if(!arguments[i]) continue;
       for(var key in arguments[i]) {
         if(arguments[i].hasOwnProperty(key)) {
