@@ -15,10 +15,11 @@
 //  
 //  Read [PX, EM or REM Media Queries?](https://zellwk.com/blog/media-query-units/)
 //  by Zell Liew for more information on units in media queries.
-$mq--breakpoints: (
+$mq-breakpoints: (
   (xs 480px)
   (sm 768px)
   (md 1024px)
+  (lg 1280px)
   (lg 1280px)
   (xl 1440px)
 ) !default;
@@ -28,12 +29,12 @@ $mq--breakpoints: (
 //  false, if you don’t need the JavaScript functionality or
 //  you want to call `@include mq-print-pseudo-rules()`
 //  manually.
-$mq--print-pseudo-rules :  true           !default;
+$mq-print-pseudo-rules :  true           !default;
 
 // Debug settings
-$mq--debug              : false           !default;
-$mq--debug-z-index      : 10000           !default;
-$mq--debug-selector     : 'body::after'   !default;
+$mq-debug              : false           !default;
+$mq-debug-z-index      : 10000           !default;
+$mq-debug-selector     : 'body::after'   !default;
 
 
 //  Mixin for generating tge media queries
@@ -82,20 +83,20 @@ $mq--debug-selector     : 'body::after'   !default;
     } @elseif type-of($query) == list {
       @if length($query) == 4 and nth($query, 1) == from and nth($query, 3) == to {
         // from {breakpoint} to {breakpoint}
-        $min-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 2)));
-        $max-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 4)) - 1px);
+        $min-width: mq-px2em(mq-retrieve-breakpoint-width(nth($query, 2)));
+        $max-width: mq-px2em(mq-retrieve-breakpoint-width(nth($query, 4)) - 1px);
       } @elseif length($query) == 2 {
         @if nth($query, 1) == from {
           // from {breakpoint}
-          $min-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 2))); 
+          $min-width: mq-px2em(mq-retrieve-breakpoint-width(nth($query, 2))); 
         } @elseif nth($query, 1) == to {
           // to {breakpoint}
-          $max-width: mq--px2em(mq--retrieve-breakpoint-width(nth($query, 2)) - 1px);
+          $max-width: mq-px2em(mq-retrieve-breakpoint-width(nth($query, 2)) - 1px);
         }
       }
     } @else {
       // {breakpoint} => from {breakpoint}
-      $min-width: mq--px2em(mq--retrieve-breakpoint-width($query));
+      $min-width: mq-px2em(mq-retrieve-breakpoint-width($query));
     }
   }
 
@@ -136,10 +137,10 @@ $mq--debug-selector     : 'body::after'   !default;
 //  not an additional "base font size" to be set.
 //  
 //  @return The em equivalent of given pixel value.
-@function mq--px2em($px) {
+@function mq-px2em($px) {
   @if (unitless($px)) {
      @warn "Assuming #{$px} to be in pixels, attempting to convert it into pixels for you";
-     @return mq--px2em($px + 0px); // That may fail.
+     @return mq-px2em($px + 0px); // That may fail.
   } @else if (unit($px) == em) {
      @return $px;
   }
@@ -151,8 +152,8 @@ $mq--debug-selector     : 'body::after'   !default;
 // a font-size of 16px.
 // 
 // @return The min-width of a breakpoint in pixels
-@function mq--retrieve-breakpoint-width($name) {
-  @each $breakpoint in $mq--breakpoints {
+@function mq-retrieve-breakpoint-width($name) {
+  @each $breakpoint in $mq-breakpoints {
     $breakpoint-name:  nth($breakpoint, 1);
     $breakpoint-width: nth($breakpoint, 2);
 
@@ -171,14 +172,14 @@ $mq--debug-selector     : 'body::after'   !default;
 
 // Prints the pseudo-rule(s) needed by the JS counterpart
 // of mµ.
-@mixin mq--print-pseudo-rules {
+@mixin mq-print-pseudo-rules {
 
   $breakpoint-names: "";
 
-  @each $breakpoint in $mq--breakpoints {
+  @each $breakpoint in $mq-breakpoints {
     $breakpoint-name  : nth($breakpoint, 1);
     $breakpoint-width : nth($breakpoint, 2);
-    $add: ' "#{$breakpoint-name}": "(min-width: #{mq--px2em($breakpoint-width)})" ';
+    $add: ' "#{$breakpoint-name}": "(min-width: #{mq-px2em($breakpoint-width)})" ';
     @if $breakpoint-names != "" {
       $breakpoint-names: "#{$breakpoint-names},#{$add}";
     } @else {
@@ -195,20 +196,20 @@ $mq--debug-selector     : 'body::after'   !default;
   }
 }
 
-@if $mq--print-pseudo-rules {
+@if $mq-print-pseudo-rules {
   // Print pseudo-rules, if enabled
-  @include mq--print-pseudo-rules();
+  @include mq-print-pseudo-rules();
 }
 
-@if $mq--debug {
+@if $mq-debug {
   // Print debug rules, if enabled
-  #{unquote($mq--debug-selector)} {
+  #{unquote($mq-debug-selector)} {
     display: block;
     position: fixed;
     font-size: 10px;
     font-family: sans-serif;
     line-height: 1;
-    z-index: $mq--debug-z-index;
+    z-index: $mq-debug-z-index;
     background: rgba(0,0,0,0.75);
     color: #fff;
     padding: 3px 6px;
@@ -216,12 +217,12 @@ $mq--debug-selector     : 'body::after'   !default;
     right: 0;
   }
 
-  @each $breakpoint in $mq--breakpoints {
+  @each $breakpoint in $mq-breakpoints {
     $breakpoint-name  : nth($breakpoint, 1);
     $breakpoint-width : nth($breakpoint, 2);
 
     @include mq($breakpoint-name) {
-      #{unquote($mq--debug-selector)} {
+      #{unquote($mq-debug-selector)} {
         content: "#{$breakpoint-name} (>= #{$breakpoint-width})";
       }
     }
